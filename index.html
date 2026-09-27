@@ -1150,7 +1150,7 @@ document.getElementById("browser-popup-close").addEventListener("click", () => {
 const form = document.getElementById("form-rsvp");
 const msg = document.getElementById("form-msg");
 const btnSubmit = document.getElementById("btn-submit");
-
+ 
 form.addEventListener("submit", (ev) => {
   ev.preventDefault();
   const data = {
@@ -1162,9 +1162,13 @@ form.addEventListener("submit", (ev) => {
   btnSubmit.disabled = true;
   btnSubmit.textContent = "Mengirim...";
   msg.textContent = "";
-
-  google.script.run
-    .withSuccessHandler((res) => {
+ 
+  fetch(CONFIG.scriptURL, {
+    method: "POST",
+    body: JSON.stringify(data)
+  })
+    .then(res => res.json())
+    .then(res => {
       btnSubmit.disabled = false;
       btnSubmit.textContent = "Kirim Ucapan";
       if (res && res.status === "success") {
@@ -1173,21 +1177,22 @@ form.addEventListener("submit", (ev) => {
         form.reset();
         loadUcapan();
       } else {
-        msg.textContent = "Gagal mengirim. Silakan coba lagi.";
+        msg.textContent = (res && res.message) || "Gagal mengirim. Silakan coba lagi.";
       }
     })
-    .withFailureHandler((err) => {
+    .catch(err => {
       btnSubmit.disabled = false;
       btnSubmit.textContent = "Kirim Ucapan";
-      msg.textContent = "Gagal mengirim: " + err.message;
-    })
-    .saveRSVP(data);
+      msg.textContent = "Gagal mengirim. Periksa koneksi internet Anda.";
+      console.error(err);
+    });
 });
-
+ 
 function loadUcapan(){
   const list = document.getElementById("ucapan-list");
-  google.script.run
-    .withSuccessHandler((data) => {
+  fetch(CONFIG.scriptURL + "?action=list")
+    .then(res => res.json())
+    .then(data => {
       if (!Array.isArray(data) || data.length === 0){
         list.innerHTML = `<div class="ucapan-item"><p style="opacity:.6; text-align:center;">Jadilah yang pertama mengirim ucapan.</p></div>`;
         return;
@@ -1199,10 +1204,9 @@ function loadUcapan(){
           <p>${escapeHtml(item.pesan||"")}</p>
         </div>`).join("");
     })
-    .withFailureHandler(() => {
+    .catch(() => {
       list.innerHTML = `<div class="ucapan-item"><p style="opacity:.6; text-align:center;">Gagal memuat ucapan.</p></div>`;
-    })
-    .getUcapanList();
+    });
 }
 function formatWaktu(iso){
   if (!iso) return "";
