@@ -576,9 +576,14 @@ form.rsvp{text-align:left; margin-top:20px; display:flex; flex-direction:column;
         <h3 id="nama-pria">Pria</h3>
         <div class="nama-lengkap" id="namalengkap-pria">Nama Lengkap Putra</div>
         <div class="ortu" id="ortu-pria">Putra dari<br>Bapak ... &amp; Ibu ...</div>
+        <div style="display:flex; gap:10px; justify-content:center;">
         <a class="ig-link" id="ig-pria" href="#" target="_blank" rel="noopener" style="display:none;">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
         </a>
+        <a class="ig-link" id="tiktok-pria" href="#" target="_blank" rel="noopener" style="display:none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+        </a>
+        </div>
       </div>
     </div>
   </section>
@@ -785,7 +790,8 @@ const CONFIG = {
     namaLengkap: "Roiddudin Alghifari, S.Kom",
     ortu: "Bapak Drs. Ali Rubiyanto dan Ibu Pri Hartanti, S.Pd",
     foto: "https://drive.google.com/thumbnail?id=1_sOw7PzlGg4aceD7UemoyixkTMGrHjRm&sz=w2000",
-    instagram: "https://instagram.com/alghifariroi_" // contoh: "https://instagram.com/username" — kosongkan untuk sembunyikan
+    instagram: "https://instagram.com/alghifariroi_",
+    tiktok: "https://tiktok.com/alghifariroi"// contoh: "https://instagram.com/username" — kosongkan untuk sembunyikan
   },
   wanita: {
     nama: "Dwi",
@@ -856,6 +862,10 @@ document.getElementById("ortu-pria").innerHTML = "Putra dari<br>" + CONFIG.pria.
 if (CONFIG.pria.instagram) {
   const el = document.getElementById("ig-pria");
   el.href = CONFIG.pria.instagram; el.style.display = "flex";
+}
+if (CONFIG.pria.tiktok) {
+  const elTtPria = document.getElementById("tiktok-pria");
+  elTtPria.href = CONFIG.pria.tiktok; elTtPria.style.display = "flex";
 }
 
 document.getElementById("foto-wanita").src = CONFIG.wanita.foto;
